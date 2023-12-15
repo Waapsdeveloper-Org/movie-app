@@ -15,7 +15,7 @@ class FilmController extends Controller
     {
         //
         $films = Film::all();
-        return self::success('FIlms List', ['films' => $films]);
+        return self::success('FIlms List', ['data' => $films]);
     }
 
     /**
