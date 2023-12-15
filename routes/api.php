@@ -22,6 +22,7 @@ Route::group(['prefix' => 'tests'], function () {
 Route::resource('films', FilmController::class);
 
 Route::group(['prefix' => 'auth'], function () {
+    Route::get('/user', 'App\Http\Controllers\AuthController@getcurrentUser') -> middleware('auth:api');
     Route::post('/login', 'App\Http\Controllers\AuthController@login');
     Route::post('/register', 'App\Http\Controllers\AuthController@register');
     Route::get('/logout', 'App\Http\Controllers\AuthController@logout');

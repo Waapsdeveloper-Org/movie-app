@@ -47,4 +47,12 @@ class AuthController extends Controller
         Auth::logout();
         return self::success('Logout Success');
     }
+    public function getcurrentUser(){
+         
+        $user = Auth::user();
+        if (!$user) {
+            return self::failure('No authenticated user found', null, 404);
+        }
+        return self::success('Current user found', ['user' => $user]);
+    }
 }
