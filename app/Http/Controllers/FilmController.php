@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Film;
+use App\Models\Comment;
+use App\Models\Rating;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class FilmController extends Controller
@@ -145,5 +148,54 @@ class FilmController extends Controller
         $film->delete();
 
         return self::success('Film Deleted');
+    }
+
+    public function getComments(string $id)
+    {
+        $film = Film::find($id);
+        if (!$film) {
+            return self::failure('Film Not Found');
+        }
+
+        $comments = $film->comments;
+
+        return self::success('Comments List', ['data' => $comments]);
+    }
+
+    public function postFilmComments(Request $request)
+    {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'film_id' => 'required|integer|exists:films,id',
+            'comment' => 'required|string',
+            'rating' => 'required|integer|between:1,5',
+        ]);
+
+        if ($validator->fails()) {
+            return self::failure($validator->errors()->first());
+        }
+
+        $user = Auth::user();
+        $obj = [
+            'film_id' => $data['film_id'],
+            'user_id' => $user->id,
+            'comment' => $data['comment'],
+        ];
+
+        $comment = Comment::create($obj);
+
+        $ratingObj = [
+            'film_id' => $data['film_id'],
+            'user_id' => $user->id,
+            'rating' => $data['rating'],
+        ];
+
+        $rating = Rating::create($ratingObj);
+
+        return self::success('Comment Created', ['data' => [
+            'comment' => $comment,
+            'rating' => $rating
+        ]]);
     }
 }

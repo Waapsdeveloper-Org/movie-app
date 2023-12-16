@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\FilmController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\CommentsController;
+use App\Http\Controllers\RatingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,11 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['prefix' => 'tests'], function () {
-    Route::get('/', 'App\Http\Controllers\TestController@index');
-});
-
 Route::resource('films', FilmController::class);
+Route::get('films/{id}/comments', [FilmController::class, 'getComments']);
+Route::post('films/comments', [FilmController::class, 'postFilmComments']) -> middleware('auth:api');
+
+
+Route::resource('comments', CommentsController::class);
+Route::resource('ratings', RatingsController::class);
 
 Route::group(['prefix' => 'auth'], function () {
     Route::get('/user', 'App\Http\Controllers\AuthController@getcurrentUser') -> middleware('auth:api');
@@ -27,7 +30,6 @@ Route::group(['prefix' => 'auth'], function () {
     Route::post('/register', 'App\Http\Controllers\AuthController@register');
     Route::get('/logout', 'App\Http\Controllers\AuthController@logout');
 });
-
 
 
 
