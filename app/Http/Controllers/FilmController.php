@@ -85,6 +85,10 @@ class FilmController extends Controller
             return self::failure('Film Not Found');
         }
 
+        $averageRating = $film->ratings->avg('rating');
+        $film = $film->load('comments')->toArray();
+        $film['average_rating'] = $averageRating;
+
         return self::success('Film Detail', ['data' => $film]);
     }
 
@@ -157,7 +161,7 @@ class FilmController extends Controller
             return self::failure('Film Not Found');
         }
 
-        $comments = $film->comments;
+        $comments = $film->comments->load('user');
 
         return self::success('Comments List', ['data' => $comments]);
     }

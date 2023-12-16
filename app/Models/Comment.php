@@ -14,4 +14,14 @@ class Comment extends Model
         'comment',
         'user_id'
     ];
+
+    public function film()
+    {
+        return $this->belongsTo(Film::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
