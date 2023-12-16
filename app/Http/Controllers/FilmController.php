@@ -11,10 +11,18 @@ class FilmController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $films = Film::all();
+        $data = $request->all();
+
+        $films = Film::query();
+
+        if(isset($data['search'])){
+            $films->where('name', 'like', '%' . $data['search'] . '%');
+        }
+
+        $films = $films->get();
         return self::success('FIlms List', ['data' => $films]);
     }
 
