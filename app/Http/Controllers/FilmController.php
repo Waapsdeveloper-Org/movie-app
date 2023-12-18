@@ -19,6 +19,19 @@ class FilmController extends Controller
         //
         $data = $request->all();
 
+        $type = isset($data['type']) ? $data['type'] : 'database';
+
+        if($type == 'database'){
+            return $this->getFilmsFromDatabase($data);
+        }else{
+            return $this->getFilmsFromElastic($request);
+        }
+
+
+    }
+
+    public function getFilmsFromDatabase($data)
+    {
         $films = Film::query();
 
         if(isset($data['search'])){
@@ -27,6 +40,12 @@ class FilmController extends Controller
 
         $films = $films->get();
         return self::success('FIlms List', ['data' => $films]);
+    }
+
+    public function getFilmsFromElastic($request)
+    {
+        $elastic = new ElasticSearchController();
+        return $elastic->search($request);
     }
 
     /**

@@ -78,8 +78,8 @@ class ElasticHelper
             'index' => 'films',
             'body' => [
                 'query' => [
-                    'match' => [
-                        'name' => $search
+                    'regexp' => [
+                        'name' => '.*'.$search.'.*'
                     ]
                 ]
             ]
