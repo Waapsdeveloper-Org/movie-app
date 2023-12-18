@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FilmController;
+use App\Http\Controllers\ElasticSearchController;
 use App\Http\Controllers\CommentsController;
 use App\Http\Controllers\RatingsController;
 use Illuminate\Support\Facades\Route;
@@ -16,10 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/elastic/sync', [ElasticSearchController::class, 'index']);
+Route::get('/elastic/search', [ElasticSearchController::class, 'search']);
+Route::get('/elastic/delete-all', [ElasticSearchController::class, 'deleteAll']);
+
 Route::resource('films', FilmController::class);
+
 Route::get('films/{id}/comments', [FilmController::class, 'getComments']);
 Route::post('films/comments', [FilmController::class, 'postFilmComments']) -> middleware('auth:api');
-
 
 Route::resource('comments', CommentsController::class);
 Route::resource('ratings', RatingsController::class);
