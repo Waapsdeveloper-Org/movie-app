@@ -34,8 +34,8 @@ class ElasticSearchController extends Controller
         $search = $request->get('search');
         // get all films data and index it in elastic search
         $elastic = new ElasticHelper();
-        $films = $elastic->search($search);
-        return self::success('FIlms List', ['data' => $films]);
+        $result = $elastic->search($search);
+        return response()->json($result);
     }
 
     public function deleteAll(Request $request)

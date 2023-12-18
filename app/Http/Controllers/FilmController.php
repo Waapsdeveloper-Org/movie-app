@@ -45,7 +45,24 @@ class FilmController extends Controller
     public function getFilmsFromElastic($request)
     {
         $elastic = new ElasticSearchController();
-        return $elastic->search($request);
+        $result = $elastic->search($request);
+        $array = $result->getData();
+        $data = collect($array)->map(function ($item) {
+            $obj = json_encode($item);
+            $item = json_decode($obj, true);
+            return [
+                'id' => $item['_id'],
+                'name' => $item['_source']['name'],
+                'description' => $item['_source']['description'],
+                'release_date' => $item['_source']['release_date'],
+                'ticket_price' => $item['_source']['ticket_price'],
+                'country' => $item['_source']['country'],
+                'genre' => $item['_source']['genre'],
+                'photo' => $item['_source']['photo'],
+            ];
+        });
+
+        return self::success('FIlms List', ['data' => $data]);
     }
 
     /**
